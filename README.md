@@ -1,5 +1,7 @@
 # Which Sweater Fits Which Kitten?
 
+![Three cartoon kittens in striped, dotted and heart sweaters beside a basket of yarn](cover.svg)
+
 A see-and-tap matching game for families: put the right tiny sweater on each shy kitten.
 
 ## Play it
