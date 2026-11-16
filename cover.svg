@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400" role="img" aria-label="Three kittens in striped, dotted and heart sweaters beside a basket of yarn">
+  <rect width="800" height="400" fill="#fdf1e4"/>
+  <circle cx="90" cy="70" r="90" fill="#f7c9a9" opacity=".6"/>
+  <circle cx="720" cy="340" r="110" fill="#bfe3ef" opacity=".6"/>
+  <text x="400" y="70" text-anchor="middle" font-family="Georgia, serif" font-size="38" font-weight="700" fill="#5a3e36">Which Sweater Fits Which Kitten?</text>
+  <g transform="translate(150 140)">
+    <polygon points="20,38 26,6 46,28" fill="#9aa0a6"/><polygon points="80,38 74,6 54,28" fill="#9aa0a6"/>
+    <circle cx="50" cy="45" r="34" fill="#9aa0a6"/>
+    <circle cx="38" cy="42" r="5" fill="#4a3a33"/><circle cx="62" cy="42" r="5" fill="#4a3a33"/>
+    <path d="M10 90 Q50 75 90 90 L95 190 L5 190 Z" fill="#e4572e"/>
+    <rect x="5" y="110" width="90" height="12" fill="#fff"/><rect x="5" y="140" width="90" height="12" fill="#fff"/><rect x="5" y="170" width="90" height="12" fill="#fff"/>
+  </g>
+  <g transform="translate(350 120)">
+    <polygon points="20,38 26,6 46,28" fill="#e8c170"/><polygon points="80,38 74,6 54,28" fill="#e8c170"/>
+    <circle cx="50" cy="45" r="34" fill="#e8c170"/>
+    <circle cx="38" cy="42" r="5" fill="#4a3a33"/><circle cx="62" cy="42" r="5" fill="#4a3a33"/>
+    <path d="M10 90 Q50 75 90 90 L95 210 L5 210 Z" fill="#2e86ab"/>
+    <circle cx="30" cy="125" r="8" fill="#fff"/><circle cx="70" cy="125" r="8" fill="#fff"/><circle cx="50" cy="160" r="8" fill="#fff"/><circle cx="30" cy="190" r="8" fill="#fff"/><circle cx="70" cy="190" r="8" fill="#fff"/>
+  </g>
+  <g transform="translate(550 150)">
+    <polygon points="20,38 26,6 46,28" fill="#f4a259"/><polygon points="80,38 74,6 54,28" fill="#f4a259"/>
+    <circle cx="50" cy="45" r="34" fill="#f4a259"/>
+    <circle cx="38" cy="42" r="5" fill="#4a3a33"/><circle cx="62" cy="42" r="5" fill="#4a3a33"/>
+    <path d="M10 90 Q50 75 90 90 L95 180 L5 180 Z" fill="#5aa02c"/>
+    <path d="M50 140 C35 125 38 115 50 122 C62 115 65 125 50 140 Z" fill="#fff"/>
+  </g>
+  <ellipse cx="400" cy="370" rx="70" ry="22" fill="#c99a63"/>
+  <circle cx="380" cy="352" r="18" fill="#ef6f9a"/><circle cx="415" cy="350" r="16" fill="#f2b134"/>
+</svg>
