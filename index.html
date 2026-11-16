@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Sweater Fits Which Kitten?</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;background:#fdf1e4;color:#5a3e36;min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+#app{max-width:600px;margin:0 auto;padding:0 10px 24px}
+.top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;background:#f7c9a9;border-radius:0 0 18px 18px;padding:10px 16px;font-weight:bold;font-size:18px;box-shadow:0 3px 8px rgba(90,62,54,.18)}
+.hint{text-align:center;min-height:26px;margin:10px 4px 4px;font-size:16px}
+.screen{text-align:center;padding:36px 14px}
+.screen h1{font-size:30px;line-height:1.15;margin:12px 0}
+.screen p{font-size:18px;line-height:1.4;max-width:420px;margin:10px auto}
+.big{display:inline-block;min-width:160px;min-height:56px;padding:12px 28px;margin-top:14px;border-radius:30px;background:#e4572e;color:#fff;font-size:22px;font-weight:bold;box-shadow:0 4px 0 #a93a1b}
+.big:active{transform:translateY(3px);box-shadow:0 1px 0 #a93a1b}
+.kittens{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 6px;margin-top:6px}
+.kitten{width:104px;min-height:48px;padding:4px 2px 6px;border-radius:18px;background:#fff7ee;border:3px solid transparent;display:flex;flex-direction:column;align-items:center}
+.kitten.ready{border-color:#f2b134;background:#fff3d6}
+.kitten.done{background:#f3ffe9}
+.bubble{position:relative;width:62px;height:50px;background:#fff;border:2px solid #d9c3b0;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.bubble:after{content:"";position:absolute;bottom:-9px;left:24px;width:10px;height:10px;background:#fff;border-right:2px solid #d9c3b0;border-bottom:2px solid #d9c3b0;transform:rotate(45deg)}
+.bubble svg{width:50px;height:36px;display:block}
+.bubble span{position:absolute;font-size:12px;font-weight:bold;color:#6b5b4b}
+.kbox{position:relative;height:106px;display:flex;align-items:flex-end;justify-content:center}
+.kbox>svg{display:block;height:auto}
+.over{position:absolute;left:10%;top:50%;width:80%}
+.over svg{display:block;width:100%;height:auto}
+.over.slide{animation:slide .55s ease-out}
+.tag{margin-top:4px;padding:2px 10px;border-radius:10px;background:#fff;border:2px dashed #c9a58a;font-size:14px;font-weight:bold}
+.basket{margin:18px 4px 0;padding:14px 8px 16px;border-radius:22px;background:#e9c9a1;border:4px solid #c99a63;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:10px}
+.basket-label{text-align:center;margin-top:16px;font-size:14px;font-weight:bold;color:#8a6a4f;letter-spacing:.5px}
+.sw{min-width:48px;min-height:48px;padding:4px;border-radius:14px;border:3px solid transparent;transition:transform .2s,box-shadow .2s}
+.sw svg{display:block;width:100%;height:auto}
+.sw.sel{transform:translateY(-10px) scale(1.08);border-color:#fff;box-shadow:0 0 0 4px #ffd34d,0 0 18px 6px rgba(255,211,77,.9)}
+.sw.hop{animation:hop .5s ease}
+.sw.gone{display:none}
+.kitten.wiggle .kbox{animation:wiggle .7s ease}
+.kitten.shake .kbox{animation:shake .5s ease}
+.heart{position:absolute;bottom:50%;font-size:22px;color:#ef5d8a;pointer-events:none;animation:float 1.2s ease-out forwards}
+@keyframes slide{from{transform:translateY(-70px);opacity:0}to{transform:none;opacity:1}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-6deg)}80%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@keyframes hop{0%{transform:translateY(-10px) scale(1.08)}40%{transform:translateY(-28px)}100%{transform:none}}
+@keyframes float{from{transform:translateY(0);opacity:1}to{transform:translateY(-70px);opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition:none!important}}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top" id="top" hidden>
+    <span id="roundLbl">Round 1 of 3</span>
+    <span id="scoreLbl">Score: 0</span>
+  </div>
+
+  <div class="screen" id="startScreen">
+    <svg width="120" height="110" viewBox="0 0 100 120" aria-hidden="true">
+      <polygon points="20,34 28,4 48,26" fill="#e8c170"/><polygon points="80,34 72,4 52,26" fill="#e8c170"/>
+      <circle cx="50" cy="42" r="32" fill="#e8c170"/>
+      <circle cx="38" cy="40" r="4.5" fill="#4a3a33"/><circle cx="62" cy="40" r="4.5" fill="#4a3a33"/>
+      <ellipse cx="50" cy="52" rx="4" ry="3" fill="#e58a9a"/>
+      <path d="M50 55 Q44 62 38 58 M50 55 Q56 62 62 58" stroke="#4a3a33" stroke-width="2" fill="none"/>
+    </svg>
+    <h1>Which Sweater Fits Which Kitten?</h1>
+    <p>The Kitty Crochet Collective knits tiny sweaters for shy kittens. Tap a sweater, then tap the kitten whose size and pattern match it.</p>
+    <button class="big" id="startBtn">Start</button>
+  </div>
+
+  <div id="game" class="hidden">
+    <div class="hint" id="hint"></div>
+    <div class="kittens" id="kittens"></div>
+    <div class="basket-label">SWEATER BASKET</div>
+    <div class="basket" id="basket" style="margin-top:6px"></div>
+  </div>
+
+  <div class="screen hidden" id="endScreen">
+    <h1>All done!</h1>
+    <p style="font-size:34px;font-weight:bold;margin:6px 0" id="finalScore"></p>
+    <p id="praise"></p>
+    <button class="big" id="againBtn">Play again</button>
+  </div>
+</div>
+
+<script>
+(function(){
+var NAMES=["Pepper","Biscuit","Mochi","Clementine","Dot","Waffles"];
+var FUR={Pepper:"#9aa0a6",Biscuit:"#d9a066",Mochi:"#f1dfc8",Clementine:"#f4a259",Dot:"#f7f4ee",Waffles:"#e8c170"};
+var PATS=["stripes","dots","hearts","zigzag","plain"];
+var SIZES=["small","medium","large"];
+var KW=[54,70,86];   // kitten svg widths
+var SWW=[52,68,88];  // sweater widths in basket
+var COLORS=[{b:"#e4572e",i:"#ffffff"},{b:"#2e86ab",i:"#ffffff"},{b:"#5aa02c",i:"#ffffff"},{b:"#f2b134",i:"#8a4b00"},{b:"#9b5de5",i:"#ffffff"},{b:"#ef6f9a",i:"#ffffff"}];
+var ROUNDS=[{k:3,s:3},{k:4,s:4},{k:5,s:6}];
+var BODY="M32 4 Q50 14 68 4 L98 46 L83 55 L77 38 L77 72 L23 72 L23 38 L17 55 L2 46 Z";
+var uid=0, S={};
+
+function $(id){return document.getElementById(id)}
+function rnd(n){return Math.floor(Math.random()*n)}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=rnd(i+1),t=a[i];a[i]=a[j];a[j]=t}return a}
+
+function pattern(p,ink){
+  var o="",x,y,r;
+  if(p==="stripes"){for(y=6;y<72;y+=14)o+='<rect x="0" y="'+y+'" width="100" height="7" fill="'+ink+'"/>'}
+  else if(p==="dots"){for(r=0;r<3;r++)for(x=0;x<5;x++)o+='<circle cx="'+(10+x*20+(r%2?10:0))+'" cy="'+(14+r*22)+'" r="6" fill="'+ink+'"/>'}
+  else if(p==="hearts"){for(r=0;r<3;r++)for(x=0;x<4;x++)o+='<path transform="translate('+(18+x*22+(r%2?11:0))+' '+(15+r*21)+') scale(1.15)" d="M0 5 C-11 -3 -8 -10 0 -5 C8 -10 11 -3 0 5Z" fill="'+ink+'"/>'}
+  else if(p==="zigzag"){for(y=14;y<72;y+=20){var pts="";for(x=0;x<=108;x+=12)pts+=x+","+(y+((x/12)%2?9:0))+" ";o+='<polyline points="'+pts+'" fill="none" stroke="'+ink+'" stroke-width="5" stroke-linejoin="round"/>'}}
+  return o;
+}
+function sweaterSVG(s){
+  var id="c"+(++uid);
+  return '<svg viewBox="0 0 100 72" aria-hidden="true"><defs><clipPath id="'+id+'"><path d="'+BODY+'"/></clipPath></defs>'+
+    '<path d="'+BODY+'" fill="'+s.col.b+'"/><g clip-path="url(#'+id+')">'+pattern(s.pat,s.col.i)+'</g>'+
+    '<path d="'+BODY+'" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="2.5" stroke-linejoin="round"/>'+
+    '<path d="M34 5 Q50 17 66 5" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="5" stroke-linecap="round"/></svg>';
+}
+function swatchSVG(p){
+  var id="b"+(++uid);
+  return '<svg viewBox="0 0 100 72" aria-hidden="true"><defs><clipPath id="'+id+'"><rect width="100" height="72" rx="10"/></clipPath></defs>'+
+    '<rect width="100" height="72" rx="10" fill="#efe6da"/><g clip-path="url(#'+id+')">'+pattern(p,"#8a6f5a")+'</g></svg>';
+}
+function kittenSVG(fur){
+  return '<svg viewBox="0 0 100 120" aria-hidden="true">'+
+    '<path d="M80 100 Q104 90 96 62" stroke="'+fur+'" stroke-width="10" fill="none" stroke-linecap="round"/>'+
+    '<polygon points="20,38 26,6 46,28" fill="'+fur+'"/><polygon points="80,38 74,6 54,28" fill="'+fur+'"/>'+
+    '<polygon points="26,30 28,15 38,27" fill="#f2a9b8"/><polygon points="74,30 72,15 62,27" fill="#f2a9b8"/>'+
+    '<ellipse cx="50" cy="90" rx="30" ry="29" fill="'+fur+'"/>'+
+    '<circle cx="50" cy="42" r="32" fill="'+fur+'"/>'+
+    '<circle cx="37" cy="40" r="5" fill="#4a3a33"/><circle cx="63" cy="40" r="5" fill="#4a3a33"/>'+
+    '<circle cx="38.5" cy="38.5" r="1.7" fill="#fff"/><circle cx="64.5" cy="38.5" r="1.7" fill="#fff"/>'+
+    '<ellipse cx="50" cy="51" rx="4.5" ry="3.2" fill="#e58a9a"/>'+
+    '<path d="M50 54 Q45 61 39 57 M50 54 Q55 61 61 57" stroke="#4a3a33" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+    '<circle cx="28" cy="52" r="5" fill="#f2a9b8" opacity=".55"/><circle cx="72" cy="52" r="5" fill="#f2a9b8" opacity=".55"/>'+
+    '<path d="M22 48 L6 45 M22 54 L6 56 M78 48 L94 45 M78 54 L94 56" stroke="#8a7468" stroke-width="1.5" stroke-linecap="round"/></svg>';
+}
+
+function makeRound(r){
+  var cfg=ROUNDS[r],ks,used,sizes;
+  do{
+    ks=[];used={};
+    while(ks.length<cfg.k){
+      var sz=rnd(3),pt=rnd(5),key=sz+"-"+pt;
+      if(used[key])continue;
+      used[key]=1;ks.push({size:sz,pat:PATS[pt]});
+    }
+    sizes={};ks.forEach(function(k){sizes[k.size]=1});
+  }while(Object.keys(sizes).length<2);
+  var names=shuffle(NAMES).slice(0,cfg.k);
+  ks.forEach(function(k,i){k.name=names[i];k.fur=FUR[names[i]];k.missed=false;k.done=false});
+  var sw=ks.map(function(k){return {size:k.size,pat:k.pat,decoy:false}});
+  if(cfg.s>cfg.k){
+    var d;
+    do{d={size:rnd(3),pat:PATS[rnd(5)],decoy:true}}while(used[d.size+"-"+PATS.indexOf(d.pat)]);
+    sw.push(d);
+  }
+  var cols=shuffle(COLORS);
+  sw=shuffle(sw);
+  sw.forEach(function(s,i){s.col=cols[i];s.used=false});
+  S.kittens=ks;S.sweaters=sw;S.selected=-1;S.busy=false;
+}
+
+function renderRound(){
+  $("roundLbl").textContent="Round "+(S.round+1)+" of 3";
+  var kh="";
+  S.kittens.forEach(function(k,i){
+    kh+='<button class="kitten" data-k="'+i+'" aria-label="'+k.name+', '+SIZES[k.size]+' kitten wanting '+k.pat+'">'+
+      '<div class="bubble">'+swatchSVG(k.pat)+(k.pat==="plain"?'<span>plain</span>':'')+'</div>'+
+      '<div class="kbox" style="width:'+KW[k.size]+'px">'+kittenSVG(k.fur)+'</div>'+
+      '<div class="tag">'+k.name+'</div></button>';
+  });
+  $("kittens").innerHTML=kh;
+  Array.prototype.forEach.call(document.querySelectorAll(".kbox svg"),function(sv,i){sv.setAttribute("width",KW[S.kittens[i].size])});
+  var sh="";
+  S.sweaters.forEach(function(s,i){
+    sh+='<button class="sw" data-s="'+i+'" style="width:'+(SWW[s.size]+8)+'px" aria-label="'+SIZES[s.size]+' '+s.pat+' sweater">'+sweaterSVG(s)+'</button>';
+  });
+  $("basket").innerHTML=sh;
+  setHint("Tap a sweater, then tap the kitten it fits.");
+}
+function setHint(t){$("hint").textContent=t}
+function setScore(){$("scoreLbl").textContent="Score: "+S.score}
+function clearReady(){Array.prototype.forEach.call(document.querySelectorAll(".kitten"),function(e){e.classList.remove("ready")})}
+
+function pickSweater(i){
+  if(S.busy||S.sweaters[i].used)return;
+  var els=document.querySelectorAll(".sw");
+  Array.prototype.forEach.call(els,function(e){e.classList.remove("sel")});
+  if(S.selected===i){S.selected=-1;clearReady();setHint("Tap a sweater, then tap the kitten it fits.");return}
+  S.selected=i;els[i].classList.add("sel");
+  Array.prototype.forEach.call(document.querySelectorAll(".kitten"),function(e,n){
+    if(!S.kittens[n].done)e.classList.add("ready");
+  });
+  setHint("Now tap the kitten it fits.");
+}
+function tryOn(ki){
+  var k=S.kittens[ki];
+  if(S.busy||k.done)return;
+  if(S.selected<0){setHint("Pick a sweater from the basket first.");return}
+  var s=S.sweaters[S.selected],si=S.selected;
+  var kel=document.querySelectorAll(".kitten")[ki],sel=document.querySelectorAll(".sw")[si];
+  if(s.size===k.size&&s.pat===k.pat){
+    S.busy=true;
+    k.done=true;s.used=true;
+    S.score+=k.missed?1:2;setScore();
+    sel.classList.remove("sel");sel.classList.add("gone");
+    S.selected=-1;clearReady();
+    kel.classList.add("done");
+    var box=kel.querySelector(".kbox");
+    var ov=document.createElement("div");ov.className="over slide";ov.innerHTML=sweaterSVG(s);box.appendChild(ov);
+    kel.classList.add("wiggle");
+    for(var h=0;h<4;h++)(function(h){
+      var sp=document.createElement("span");sp.className="heart";sp.textContent="♥";
+      sp.style.left=(15+h*20)+"%";sp.style.animationDelay=(h*0.12)+"s";box.appendChild(sp);
+      setTimeout(function(){sp.remove()},1500);
+    })(h);
+    setHint(k.name+" loves it!");
+    setTimeout(function(){kel.classList.remove("wiggle");S.busy=false;checkDone()},900);
+  }else{
+    k.missed=true;
+    S.busy=true;
+    kel.classList.remove("shake");void kel.offsetWidth;kel.classList.add("shake");
+    sel.classList.remove("sel");sel.classList.remove("hop");void sel.offsetWidth;sel.classList.add("hop");
+    S.selected=-1;clearReady();
+    setHint("Hmm, not quite. "+k.name+" wants a different one. Try again!");
+    setTimeout(function(){kel.classList.remove("shake");sel.classList.remove("hop");S.busy=false},550);
+  }
+}
+function checkDone(){
+  if(S.kittens.some(function(k){return !k.done}))return;
+  S.busy=true;
+  setHint(S.round<2?"All snug! On to the next round...":"All snug!");
+  setTimeout(function(){
+    if(S.round<2){S.round++;makeRound(S.round);renderRound();S.busy=false}
+    else finish();
+  },1400);
+}
+function finish(){
+  $("game").classList.add("hidden");
+  $("endScreen").classList.remove("hidden");
+  $("finalScore").textContent=S.score+" out of 24";
+  var p=S.score>=20?"Purr-fect! Every kitten is snug, happy and ready for a nap. Thank you!":
+        S.score>=14?"So cozy! The kittens are purring thanks to you.":
+        "Mrrrow! You found every sweater. The kittens feel warm and brave now!";
+  $("praise").textContent=p;
+}
+function startGame(){
+  S.score=0;S.round=0;
+  $("startScreen").classList.add("hidden");
+  $("endScreen").classList.add("hidden");
+  $("top").hidden=false;
+  $("game").classList.remove("hidden");
+  setScore();makeRound(0);renderRound();
+  window.scrollTo(0,0);
+}
+$("startBtn").addEventListener("click",startGame);
+$("againBtn").addEventListener("click",startGame);
+$("kittens").addEventListener("click",function(e){
+  var b=e.target.closest(".kitten");if(b)tryOn(+b.getAttribute("data-k"));
+});
+$("basket").addEventListener("click",function(e){
+  var b=e.target.closest(".sw");if(b)pickSweater(+b.getAttribute("data-s"));
+});
+})();
+</script>
+</body>
+</html>
